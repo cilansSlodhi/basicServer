@@ -1,0 +1,43 @@
+name: Deploy Node.js App to Elastic Beanstalk
+
+on:
+  push:
+    branches:
+      - main  # Change if you use another branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout the repo
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # Step 2: Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'  # Use your Node.js version
+
+      # Step 3: Install dependencies
+      - name: Install Dependencies
+        run: npm install
+
+      # Step 4: Zip the application for EB
+      - name: Zip Application
+        run: zip -r app.zip . -x "*.git*" "*.github*"
+
+      # Step 5: Deploy to Elastic Beanstalk
+      - name: Deploy to EB
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          application_name: HelloNodeApp        # Your EB Application Name
+          environment_name: HelloNodeApp-env    # Your EB Environment Name
+          region: ap-northeast-3                    # Change to your region
+          version_label: ${{ github.sha }}
+          bucket_name: cilanssugriv-buck  # EB automatically creates a bucket; fill its name here
+          bucket_key: app-${{ github.sha }}.zip
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
