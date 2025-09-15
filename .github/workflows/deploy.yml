@@ -18,25 +18,32 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: '18'  # Use your Node.js version
+          node-version: '18'  # Match your Node.js version
 
       # Step 3: Install dependencies
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       # Step 4: Zip the application for EB
       - name: Zip Application
         run: zip -r app.zip . -x "*.git*" "*.github*"
 
-      # Step 5: Deploy to Elastic Beanstalk
+      # (Optional) Step 5: Upload Artifact for Debugging
+      - name: Upload Build Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: app-zip
+          path: app.zip
+
+      # Step 6: Deploy to Elastic Beanstalk
       - name: Deploy to EB
         uses: einaregilsson/beanstalk-deploy@v20
         with:
-          application_name: HelloNodeApp        # Your EB Application Name
-          environment_name: HelloNodeApp-env    # Your EB Environment Name
-          region: ap-northeast-3                    # Change to your region
+          application_name: basicServer          # Your EB Application Name
+          environment_name: basicServer-env      # Your EB Environment Name
+          region: ap-northeast-3                 # Change to your AWS region
           version_label: ${{ github.sha }}
-          bucket_name: cilanssugriv-buck  # EB automatically creates a bucket; fill its name here
+          bucket_name: cilanssugriv-buck         # Your S3 bucket for EB
           bucket_key: app-${{ github.sha }}.zip
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

@@ -57,6 +57,12 @@ app.delete('/api/users/:id', (req, res) => {
   res.json(deletedUser[0]);
 });
 
+app.get('/',(req,res) =>{
+  return res.json({
+    name:"Hello Sugriv"
+  });
+})
+
 // Start server
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
