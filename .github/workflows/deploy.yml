@@ -3,7 +3,7 @@ name: Deploy Node.js App to Elastic Beanstalk
 on:
   push:
     branches:
-      - main  # Change if you use another branch
+      - master  # Change if you use another branch
 
 jobs:
   deploy:
