@@ -3,7 +3,7 @@ name: Deploy Node.js App to Elastic Beanstalk
 on:
   push:
     branches:
-      - master  # Change if you use another branch
+      - master # Change if you use another branch
 
 jobs:
   deploy:
@@ -12,13 +12,13 @@ jobs:
     steps:
       # Step 1: Checkout the repo
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       # Step 2: Setup Node.js
       - name: Setup Node.js
-        uses: actions/upload-artifact@v4
+        uses: actions/setup-node@v4
         with:
-          node-version: '18'  # Match your Node.js version
+          node-version: '18' # Match your Node.js version
 
       # Step 3: Install dependencies
       - name: Install Dependencies
@@ -30,7 +30,7 @@ jobs:
 
       # (Optional) Step 5: Upload Artifact for Debugging
       - name: Upload Build Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: app-zip
           path: app.zip
